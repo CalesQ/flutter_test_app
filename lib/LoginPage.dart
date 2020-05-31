@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:test_app/RegPage.dart';
 import 'package:test_app/home.dart';
+import 'package:test_app/utils/Contant.dart';
 import 'package:test_app/utils/LocalStore.dart';
 import 'package:test_app/utils/Toast.dart';
 import 'utils/SendRequest.dart';
@@ -335,6 +336,12 @@ class LoginPageState extends State<LoginPage> {
     );
 
     return Scaffold(
+      appBar: new AppBar(
+        title: new Text("登录"),
+        leading: Icon(Icons.account_box),
+        backgroundColor: getMainColor(),
+        centerTitle: true,
+      ),
       backgroundColor: Colors.white,
       // 外层添加一个手势，用于点击空白部分，回收键盘
       body: new GestureDetector(

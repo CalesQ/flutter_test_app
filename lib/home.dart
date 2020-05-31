@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:test_app/utils/Contant.dart';
 import 'package:test_app/utils/SendRequest.dart';
 import 'package:test_app/utils/Toast.dart';
 
@@ -22,9 +23,10 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    // 注册按钮区域
-    Widget regButtonArea = new Container(
-      margin: EdgeInsets.only(left: 20,right: 20),
+
+    // 修改个人信息按钮区域
+    Widget updateInfoButtonArea = new Container(
+      margin: EdgeInsets.only(left: 20, right: 20),
       height: 45.0,
       child: new RaisedButton(
         color: Colors.blue[300],
@@ -33,29 +35,34 @@ class HomePageState extends State<HomePage> {
           style: Theme.of(context).primaryTextTheme.headline,
         ),
         // 设置按钮圆角
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        onPressed: (){
-        },
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        onPressed: () {},
       ),
     );
 
     return Scaffold(
+      appBar: new AppBar(
+        title: new Text("主页"),
+        leading: Icon(Icons.home),
+        backgroundColor: getMainColor(),
+        centerTitle: true,
+      ),
       backgroundColor: Colors.white,
-      // 外层添加一个手势，用于点击空白部分，回收键盘
+      // 外层添加一个手势，用于点击空白部分
       body: new GestureDetector(
-        onTap: (){
+        onTap: () {
           // 点击空白区域，回收键盘
           print("点击了空白区域");
         },
         child: new ListView(
           children: <Widget>[
-          new SizedBox(height: 70.0),
-          regButtonArea,
-          new SizedBox(height: 40.0),
-        ],
+            new SizedBox(height: 70.0),
+            updateInfoButtonArea,
+            new SizedBox(height: 40.0),
+          ],
         ),
       ),
     );
   }
-  
 }

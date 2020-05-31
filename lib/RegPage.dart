@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_app/utils/Contant.dart';
 import 'package:test_app/utils/Toast.dart';
 
 import 'utils/SendRequest.dart';
@@ -285,7 +286,12 @@ class RegPageState extends State<RegPage> {
 
     // 返回
     return Scaffold(
-      backgroundColor: Colors.white,
+      appBar: new AppBar(
+        title: new Text("主页"),
+        leading: Icon(Icons.verified_user),
+        backgroundColor: getMainColor(),
+        centerTitle: true,
+      ),
       // 外层添加一个手势，用于点击空白部分，回收键盘
       body: new GestureDetector(
         onTap: (){
