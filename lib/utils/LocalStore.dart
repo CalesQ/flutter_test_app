@@ -5,7 +5,7 @@ setStorage(key, value) async {
   prefs.setString(key, value);
 }
 
-getStorage(key) async {
+Future<String> getStorage(key) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getString(key) ?? "";
 }

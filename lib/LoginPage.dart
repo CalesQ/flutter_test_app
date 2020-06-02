@@ -87,13 +87,6 @@ class LoginPageState extends State<LoginPage> {
    * 验证用户名
    */
   String validateUserName(value) {
-    // 正则匹配手机号
-    // RegExp exp = RegExp(r'^((13[0-9])|(14[0-9])|(15[0-9])|(16[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))\d{8}$');
-    // if (value.isEmpty) {
-    //   return '用户名不能为空!';
-    // }else if (!exp.hasMatch(value)) {
-    //   return '请输入正确手机号';
-    // }
     if (value.isEmpty) {
       return "用户名不能为空";
     } else if (value.trim().length < 1 && value.trim().length > 18) {
@@ -224,7 +217,7 @@ class LoginPageState extends State<LoginPage> {
               "password": password
             };
             // 登录操作
-            request('/api/v1/user/login', 'POST', null, null, data).then((res) {
+            request('/api/v1/user/login', 'POST', null, null, data, context).then((res) {
               if (res != null) {
                 print(res["data"]["user_id"]);
                 var userId = res["data"]["user_id"];
@@ -327,7 +320,7 @@ class LoginPageState extends State<LoginPage> {
             //点击快速注册、执行事件
             onPressed: () {
               //跳转到新的 页面我们需要调用 navigator.push方法
-              Navigator.push(context,
+              Navigator.pushReplacement(context,
                   new MaterialPageRoute(builder: (context) => new Reg()));
             },
           )

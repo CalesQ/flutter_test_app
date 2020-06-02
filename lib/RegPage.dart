@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_app/LoginPage.dart';
 import 'package:test_app/utils/Contant.dart';
 import 'package:test_app/utils/Toast.dart';
 
@@ -25,8 +26,8 @@ class RegPageState extends State<RegPage> {
   var userName = '';
   var password = '';
   var password1 = '';
-  var roleCode = '';
-  var vipCode = '';
+  var roleCode = 'x2v4n6';
+  var vipCode = '111aaa';
 
   var isShowPwd = false; //是否显示密码
   var isShowPwd1 = false; //是否显示密码
@@ -53,19 +54,18 @@ class RegPageState extends State<RegPage> {
     focusNodeVIPCode.addListener(focusNodeListener);
 
     //监听用户名框的输入改变
-    userNameController.addListener((){
+    userNameController.addListener(() {
       print(userNameController.text);
 
       // 监听文本框输入变化，当有内容的时候，显示尾部清除按钮，否则不显示
       if (userNameController.text.length > 0) {
         isShowClear = true;
-      }else{
+      } else {
         isShowClear = false;
       }
-      setState(() {
-        
-      });
+      setState(() {});
     });
+
     super.initState();
   }
 
@@ -81,29 +81,26 @@ class RegPageState extends State<RegPage> {
   }
 
   // 监听焦点具体执行方法
-  Future<Null> focusNodeListener() async{
-    if(focusNodeUserName.hasFocus){
+  Future<Null> focusNodeListener() async {
+    if (focusNodeUserName.hasFocus) {
       print("用户名框获取焦点");
       // 取消其他框焦点状态
       focusNodePassword.unfocus();
       focusNodePassword1.unfocus();
       focusNodeVIPCode.unfocus();
-    }
-    else if (focusNodePassword.hasFocus) {
+    } else if (focusNodePassword.hasFocus) {
       print("密码框获取焦点");
       // 取消其他框焦点状态
       focusNodeUserName.unfocus();
       focusNodePassword1.unfocus();
       focusNodeVIPCode.unfocus();
-    }
-    else if(focusNodePassword1.hasFocus) {
+    } else if (focusNodePassword1.hasFocus) {
       print("确认密码框获取焦点");
       // 取消其他框焦点状态
       focusNodeUserName.unfocus();
       focusNodePassword.unfocus();
       focusNodeVIPCode.unfocus();
-    }
-    else {
+    } else {
       print("会员码框获取焦点");
       // 取消其他框焦点状态
       focusNodeUserName.unfocus();
@@ -114,7 +111,6 @@ class RegPageState extends State<RegPage> {
 
   @override
   Widget build(BuildContext context) {
-
     // logo 图片区域
     Widget logoImageArea = new Container(
       alignment: Alignment.topCenter,
@@ -146,7 +142,7 @@ class RegPageState extends State<RegPage> {
               focusNode: focusNodeUserName,
               decoration: InputDecoration(
                 labelText: "用户名",
-                hintText: "请输入手机号",
+                hintText: "请输入用户名",
                 prefixIcon: Icon(Icons.person),
                 //尾部添加清除按钮
                 suffixIcon: (isShowClear)
@@ -191,6 +187,10 @@ class RegPageState extends State<RegPage> {
               onSaved: (String value) {
                 password = value;
               },
+              onChanged: (String value) {
+                password = value;
+                print(password);
+              },
             ),
             // 二次密码
             new TextFormField(
@@ -224,7 +224,7 @@ class RegPageState extends State<RegPage> {
               decoration: InputDecoration(
                 labelText: "会员码(可选)",
                 hintText: "输入6位会员码可获取会员",
-                prefixIcon: Icon(Icons.people),                
+                prefixIcon: Icon(Icons.people),
               ),
               //验证用户名
               validator: validateVipCode,
@@ -240,7 +240,7 @@ class RegPageState extends State<RegPage> {
 
     // 注册按钮区域
     Widget regButtonArea = new Container(
-      margin: EdgeInsets.only(left: 20,right: 20),
+      margin: EdgeInsets.only(left: 20, right: 20),
       height: 45.0,
       child: new RaisedButton(
         color: Colors.blue[300],
@@ -249,8 +249,9 @@ class RegPageState extends State<RegPage> {
           style: Theme.of(context).primaryTextTheme.headline,
         ),
         // 设置按钮圆角
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        onPressed: (){
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        onPressed: () {
           //点击登录按钮，解除焦点，回收键盘
           focusNodePassword.unfocus();
           focusNodeUserName.unfocus();
@@ -261,17 +262,17 @@ class RegPageState extends State<RegPage> {
             //只有输入通过验证，才会执行这里
             formKey.currentState.save();
             Map<String, dynamic> data = {
-              "user_name": userName,
-              "password": password,
-              "role_code": "",
-              "level_code": ""
+              'user_name': userName,
+              'password': password,
+              'role_code': roleCode,
+              'level_code': vipCode
             };
             // 注册请求
-            request('/api/v1/user/reg', 'POST', null, null, data).then((res) {
+            request('/api/v1/user/reg', 'POST', null, null, data, context).then((res) {
               // 返回上一层
-              if(res != null) {
-              myToast("注册成功");
-              Navigator.pop(context);
+              if (res != null) {
+                myToast("注册成功");
+                Navigator.pushReplacement(context, new MaterialPageRoute(builder: (context) => new Login()));
               }
             }).whenComplete(() {
               print("登录请求处理完成");
@@ -279,7 +280,6 @@ class RegPageState extends State<RegPage> {
               myToast("出现异常,请重试");
             });
           }
-
         },
       ),
     );
@@ -287,14 +287,14 @@ class RegPageState extends State<RegPage> {
     // 返回
     return Scaffold(
       appBar: new AppBar(
-        title: new Text("主页"),
+        title: new Text("注册"),
         leading: Icon(Icons.verified_user),
         backgroundColor: getMainColor(),
         centerTitle: true,
       ),
       // 外层添加一个手势，用于点击空白部分，回收键盘
       body: new GestureDetector(
-        onTap: (){
+        onTap: () {
           // 点击空白区域，回收键盘
           print("点击了空白区域");
           focusNodePassword.unfocus();
@@ -304,14 +304,14 @@ class RegPageState extends State<RegPage> {
         },
         child: new ListView(
           children: <Widget>[
-          new SizedBox(height: 20.0),
-          logoImageArea,
-          new SizedBox(height: 20.0),
-          inputTextArea,
-          new SizedBox(height: 30.0),
-          regButtonArea,
-          new SizedBox(height: 40.0),
-        ],
+            new SizedBox(height: 20.0),
+            logoImageArea,
+            new SizedBox(height: 20.0),
+            inputTextArea,
+            new SizedBox(height: 30.0),
+            regButtonArea,
+            new SizedBox(height: 40.0),
+          ],
         ),
       ),
     );
@@ -332,20 +332,20 @@ class RegPageState extends State<RegPage> {
   /**
    * 验证第一次出入的密码是否规范
    */
-  String validatePassWord(value) {
+  String validatePassWord(String value) {
     if (value.isEmpty) {
       return '密码不能为空';
-    } else if (value.trim().length<6 || value.trim().length>18) {
+    } else if (value.trim().length < 6 || value.trim().length > 18) {
       return '密码长度不正确';
     }
-    // password = value;
     return null;
   }
 
   /**
    * 验证第二次输入的密码是否和前面一样
    */
-  String validatePassWordCheck(value) {
+  String validatePassWordCheck(String value) {
+    print("当前密码：" + value + "; " + "第一次：" + password);
     if (value != password) {
       return "两次输入的密码不一致";
     }
@@ -355,8 +355,8 @@ class RegPageState extends State<RegPage> {
   /**
    * 验证会员码
    */
-  String validateVipCode(value) {
-    if(value.trim().length != 6 && !value.isEmpty) {
+  String validateVipCode(String value) {
+    if (value.trim().length != 6 && value.isNotEmpty) {
       return "会员码长度不正确";
     }
     return null;

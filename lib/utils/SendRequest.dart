@@ -1,21 +1,24 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:test_app/utils/Toast.dart';
 
+import '../LoginPage.dart';
 import 'LocalStore.dart';
 
 var ip = "139.155.151.126:6781";
 
-Future<dynamic> request(uri, method, header, param, body) async {
+Future<dynamic> request(uri, method, header, param, body, context) async {
   print("进入request");
   if (method == "GET") {
-    return getRequest(uri, header, param, body);
+    return getRequest(uri, header, param, body, context);
   } else {
-    return postRequest(uri, header, param, body);
+    return postRequest(uri, header, param, body, context);
   }
 }
 
-Future<dynamic> getRequest(path, header, param, body) async {
+Future<dynamic> getRequest(path, header, param, body, context) async {
   print("进入get");
   var httpClient = new HttpClient();
 
@@ -43,15 +46,28 @@ Future<dynamic> getRequest(path, header, param, body) async {
   return responseBody;
 }
 
-Future<dynamic> postRequest(path, header, param, body) async {
+Future<dynamic> postRequest(path, header, param, body, context) async {
   print("进入post方法");
 
   var httpClient = new HttpClient();
   var url = Uri.http(ip, path, param);
 
   // 构建请求头
-  var userId = getStorage("user_id");
-  var token = getStorage("token");
+  String userId = '';
+  String token = '';
+
+  await getStorage('user_id').then((value) => {
+    userId = value
+  });
+
+  await getStorage('token').then((t) => {
+    token = t
+  });
+
+  Map<String, String> header = {'user_id': userId.toString(), 'token': token};
+
+  print(header['user_id']);
+  print(header['token']);
 
   var request = await httpClient.postUrl(url);
 
@@ -74,18 +90,20 @@ Future<dynamic> postRequest(path, header, param, body) async {
     // 处理返回值
     var res = json.decode(responseBody);
 
-    if(res["code"] == 200){
+    if (res["code"] == 200) {
       print("返回数据");
       return res;
+    } else {
+      myToast(res["msg"]);
     }
-    else{
-      myToast(res.msg);
-    }
-  } 
-  else if(resCode == 401) {
+    print("信息" + res["msg"]);
+  } else if (resCode == 401) {
     myToast("请重新登录");
-  }
-  else {
+    Navigator.pushAndRemoveUntil(
+        context,
+        new MaterialPageRoute(builder: (context) => new Login()),
+        (Route<dynamic> route) => false);
+  } else {
     myToast("请稍后重试");
   }
   return null;
