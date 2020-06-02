@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:test_app/Home.dart';
 import 'package:test_app/RegPage.dart';
-import 'package:test_app/home.dart';
 import 'package:test_app/utils/Contant.dart';
 import 'package:test_app/utils/LocalStore.dart';
 import 'package:test_app/utils/Toast.dart';
