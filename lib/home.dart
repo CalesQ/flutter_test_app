@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/LoginPage.dart';
 import 'package:test_app/UpdateInfoPage.dart';
-import 'package:test_app/utils/Contant.dart';
+import 'package:test_app/utils/Constant.dart';
 import 'package:test_app/utils/LocalStore.dart';
 import 'package:test_app/utils/Toast.dart';
 
