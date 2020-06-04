@@ -86,7 +86,7 @@ Future<dynamic> postRequest(path, header, param, body, context) async {
 
   var responseBody = await response.transform(utf8.decoder).join();
   print(resCode);
-  if (resCode == 200 || resCode == 202) {
+  if (resCode == 200) {
     // 处理返回值
     var res = json.decode(responseBody);
 
@@ -103,8 +103,11 @@ Future<dynamic> postRequest(path, header, param, body, context) async {
         context,
         new MaterialPageRoute(builder: (context) => new Login()),
         (Route<dynamic> route) => false);
+  } else if(resCode == 202) {
+    myToast("您的等级不够，请注意升级。");
   } else {
     myToast("请稍后重试");
   }
+  
   return null;
 }
