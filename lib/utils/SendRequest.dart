@@ -22,14 +22,11 @@ Future<dynamic> getRequest(path, header, param, body, context) async {
   print("进入get");
   var httpClient = new HttpClient();
 
-  var url = Uri.http(ip, path, null);
-  var request = await httpClient.postUrl(url);
+  var url = Uri.http(ip, path, param);
+  var request = await httpClient.getUrl(url);
 
   // 添加请求头
   request.headers.add("Content-type", "application/json");
-
-  // 添加请求体
-  request.add(utf8.encode(json.encode(param)));
 
   var response = await request.close();
 
@@ -38,12 +35,18 @@ Future<dynamic> getRequest(path, header, param, body, context) async {
 
   var responseBody = await response.transform(utf8.decoder).join();
   if (resCode == 200) {
-    print("200");
-  } else {
-    print("");
-  }
+    var res = json.decode(responseBody);
 
-  return responseBody;
+    if (res["code"] == 200){
+      return responseBody;
+    }
+    else{
+      myToast(res["msg"]);
+    }
+  } else {
+    myToast("网络错误，请重试");
+  }
+  return null;
 }
 
 Future<dynamic> postRequest(path, header, param, body, context) async {
@@ -56,13 +59,9 @@ Future<dynamic> postRequest(path, header, param, body, context) async {
   String userId = '';
   String token = '';
 
-  await getStorage('user_id').then((value) => {
-    userId = value
-  });
+  await getStorage('user_id').then((value) => {userId = value});
 
-  await getStorage('token').then((t) => {
-    token = t
-  });
+  await getStorage('token').then((t) => {token = t});
 
   Map<String, String> header = {'user_id': userId.toString(), 'token': token};
 
@@ -103,11 +102,11 @@ Future<dynamic> postRequest(path, header, param, body, context) async {
         context,
         new MaterialPageRoute(builder: (context) => new Login()),
         (Route<dynamic> route) => false);
-  } else if(resCode == 202) {
+  } else if (resCode == 202) {
     myToast("您的等级不够，请注意升级。");
   } else {
     myToast("请稍后重试");
   }
-  
+
   return null;
 }

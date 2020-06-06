@@ -212,7 +212,7 @@ class LoginPageState extends State<LoginPage> {
           if (formKey.currentState.validate()) {
             //只有输入通过验证，才会执行这里
             formKey.currentState.save();
-            Map<String, dynamic> data = {
+            Map<String, String> data = {
               "user_name": username,
               "password": password
             };
